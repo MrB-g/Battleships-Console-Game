@@ -47,7 +47,7 @@ public class Battleships {
         String startOrNot = userInput.nextLine().trim();
 
         if(startOrNot.toLowerCase().equals("yes")){
-            nextStep();
+            settingUpShips();
             return;
         } else if (startOrNot.toLowerCase().equals("no")){
             playerExitOrNot(userInput);
@@ -59,8 +59,31 @@ public class Battleships {
         welcomeFromGame();
     }
 
-    private static void nextStep(){
-        System.out.println("Well, this is next step.");
+    private static void displayRules() throws InterruptedException{
+        String[] rules = new String[8];
+        rules[0] = "Both player and computer can access five ships.";
+        rules[1] = "Player starts the battling with the computer.";
+        rules[2] = "Player should guess all the opponent ships' locations in the map.";
+        rules[3] = "Player hits computer's ship, the location should be indicated as '!'.";
+        rules[4] = "Computer hits player's ship, the location should be indicated as 'X'.";
+        rules[5] = "Both players fail to guess the opponent's location, it should be indicated as '-'.";
+        rules[6] = "The ship count should be decremented by 1 based on the hits.";
+        rules[7] = "Player or computer whose access ship count turn to zero first will be the winner.";
+
+        System.out.println(padLeft("Here are the rules that player shouold know before playing.", indent));
+        for(int rule=0; rule < rules.length; rule++){
+            String ruleLine = "Rule " + rule + " : " + rules[rule];
+            System.out.println(padLeft(ruleLine, indent));
+            Thread.sleep(1000);
+        }
+    }
+
+    private static void displayMap() {
+    }
+
+    private static void settingUpShips() throws InterruptedException{
+        System.out.println("");
+        displayRules();
     } 
 
     public static void main(String[] args) throws FileNotFoundException, InterruptedException {
