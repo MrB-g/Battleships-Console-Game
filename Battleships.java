@@ -15,11 +15,12 @@ public class Battleships {
     private static void displayAsciiArt(String filePath) throws FileNotFoundException, InterruptedException {
         File txtSourceFile = new File(filePath);
         Scanner txtReader = new Scanner(txtSourceFile);
-        while(txtReader.hasNextLine()){
+        while (txtReader.hasNextLine()) {
             String line = txtReader.nextLine();
             System.out.println(padLeft(line, indent));
             Thread.sleep(40);
         }
+        txtReader.close();
     }
 
     private static void playerExitOrNot(Scanner userInput) throws FileNotFoundException, InterruptedException {
@@ -51,6 +52,7 @@ public class Battleships {
         String startOrNot = userInput.nextLine().trim();
         if(startOrNot.toLowerCase().equals("yes")){
             settingUpShips();
+            userInput.close();
             return;
         } else if (startOrNot.toLowerCase().equals("no")){
             playerExitOrNot(userInput);
@@ -212,8 +214,11 @@ public class Battleships {
                             playerShips[index][0] = (row * 2) + 1;
                             break;
                         } else {
-                            System.out.println(padLeft("\u001B[31m\u001B[1mYour input number must be between 1 and 10. Please type again.\u001B[0m", indent));
+                            System.out.println(padLeft(
+                                    "\u001B[31m\u001B[1mYour input number must be between 1 and 10. Please type again.\u001B[0m",
+                                    indent));
                         }
+                        userInputShipRow.close();
                     } catch(Exception error) {
                         System.out.println(padLeft("\u001B[31m\u001B[1mYour input must be an integer. Please type again.\u001B[0m", indent));
                     }
@@ -228,8 +233,11 @@ public class Battleships {
                             playerShips[index][1] = column * 2;
                             break;
                         } else {
-                            System.out.println(padLeft("\u001B[31m\u001B[1mYour input number must be between 1 and 10. Please type again.\u001B[0m", indent));
+                            System.out.println(padLeft(
+                                    "\u001B[31m\u001B[1mYour input number must be between 1 and 10. Please type again.\u001B[0m",
+                                    indent));
                         }
+                        userInputShipColumn.close();
                     } catch(Exception error) {
                         System.out.println(padLeft("\u001B[31m\u001B[1mYour input must be an integer. Please type again.\u001B[0m", indent));
                     }
@@ -254,7 +262,7 @@ public class Battleships {
         System.out.println(padLeft("START THE BATTLE.", indent));
     }
 
-    private static void displayTitle() throws FileNotFoundException, InterruptedException {
+    private static void displayTitle() throws FileNotFoundException, InterruptedException{
         System.out.println("");
         displayAsciiArt("./AsciiArt/battleShips.txt");
         System.out.println("");
@@ -264,7 +272,6 @@ public class Battleships {
     public static void main(String[] args) throws FileNotFoundException, InterruptedException {
         clearConsole();
         displayTitle();
-
         startTheGame();
     }
 }
