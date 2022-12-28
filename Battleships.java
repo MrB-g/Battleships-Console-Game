@@ -32,10 +32,15 @@ public class Battleships {
         } else if (exitOrNot.toLowerCase().equals("no")){
             startTheGame();
         } else {
-            System.out.println(padLeft("Please only type \"Yes\" or \"No\".", indent));
+            System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
             Thread.sleep(1000);
             playerExitOrNot(userInput);
         }
+    }
+    
+    private static void clearConsole(){
+        System.out.print("\033[H\033[2J");  
+        System.out.flush();  
     }
 
     private static void startTheGame() throws FileNotFoundException, InterruptedException {
@@ -50,7 +55,7 @@ public class Battleships {
         } else if (startOrNot.toLowerCase().equals("no")){
             playerExitOrNot(userInput);
         } else {
-            System.out.println(padLeft("Please only type \"Yes\" or \"No\".", indent));
+            System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
             Thread.sleep(1000);
         }
         startTheGame();
@@ -174,6 +179,13 @@ public class Battleships {
         return randomShipLocation;
     }
 
+    private static void pressEnterToContinue(){
+        System.out.println(padLeft("Press Enter key to start the battle.", indent));
+        try {
+            System.in.read();
+        } catch(Exception error){}
+    }
+
     private static void settingUpShips() throws InterruptedException{
         int[][] playerShips = new int[shipCount][2];
         int[][] computerShips = generateRandomShipLocation();
@@ -186,7 +198,7 @@ public class Battleships {
         System.out.println(padLeft("Let's setup the battleships.", indent));
         displayMap(noShips, "blank");
 
-        String[] shipName = {"1st", "2nd", "3rd", "4th", "5th"};
+        String[] shipName = {"1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"};
         for(int index=0; index<playerShips.length; index++){
             boolean hasSameArray = false;
             do{
@@ -200,10 +212,10 @@ public class Battleships {
                             playerShips[index][0] = (row * 2) + 1;
                             break;
                         } else {
-                            System.out.println(padLeft("Your input number must be between 1 and 10. Please type again.", indent));
+                            System.out.println(padLeft("\u001B[31m\u001B[1mYour input number must be between 1 and 10. Please type again.\u001B[0m", indent));
                         }
                     } catch(Exception error) {
-                        System.out.println(padLeft("Your input must be an integer. Please type again.", indent));
+                        System.out.println(padLeft("\u001B[31m\u001B[1mYour input must be an integer. Please type again.\u001B[0m", indent));
                     }
                 }
 
@@ -216,31 +228,42 @@ public class Battleships {
                             playerShips[index][1] = column * 2;
                             break;
                         } else {
-                            System.out.println(padLeft("Your input number must be between 1 and 10. Please type again.", indent));
+                            System.out.println(padLeft("\u001B[31m\u001B[1mYour input number must be between 1 and 10. Please type again.\u001B[0m", indent));
                         }
                     } catch(Exception error) {
-                        System.out.println(padLeft("Your input must be an integer. Please type again.", indent));
+                        System.out.println(padLeft("\u001B[31m\u001B[1mYour input must be an integer. Please type again.\u001B[0m", indent));
                     }
                 }
 
                 hasSameArray = checkDuplicateShipLocation(playerShips, index);
                 if(hasSameArray){
-                    System.out.println(padLeft("Two ship can't be put in one location. Please chooe row and column again.",indent));
+                    System.out.println(padLeft("\u001B[31m\u001B[1mTwo ship can't be put in one location. Please chooe row and column again.\u001B[0m",indent));
                 }
             } while(hasSameArray);
 
             System.out.println(""); 
         }
-        displayMap(playerShips, "player");
-        displayMap(computerShips, "computer");
+
+        System.out.println(padLeft("\u001B[32m\u001B[1mSetup Completed...\u001B[0m", indent));
+        pressEnterToContinue();        
+
+        startTheBattle();
     } 
 
-    public static void main(String[] args) throws FileNotFoundException, InterruptedException {
+    private static void startTheBattle(){
+        System.out.println(padLeft("START THE BATTLE.", indent));
+    }
+
+    private static void displayTitle() throws FileNotFoundException, InterruptedException {
         System.out.println("");
         displayAsciiArt("./AsciiArt/battleShips.txt");
         System.out.println("");
         displayAsciiArt("./AsciiArt/title.txt");
-        
+    } 
+
+    public static void main(String[] args) throws FileNotFoundException, InterruptedException {
+        clearConsole();
+        displayTitle();
 
         startTheGame();
     }
