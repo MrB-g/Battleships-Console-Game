@@ -27,7 +27,7 @@ public class Battleships {
         System.out.print(padLeft("Are you sure you want to exit? | Please Type \"Yes\" or \"No\" : ", indent));
         String exitOrNot = userInput.nextLine().trim();
         if(exitOrNot.toLowerCase().equals("yes")){
-            System.out.println(padLeft("Hope to see you soon...", indent));
+            System.out.println(padLeft("Hope to see you again...", indent));
             System.out.println("");
             System.exit(0);
         } else if (exitOrNot.toLowerCase().equals("no")){
@@ -188,6 +188,32 @@ public class Battleships {
         } catch(Exception error){}
     }
 
+    private static int getUserInputShipRowOrColumn(String type, String shipName){
+        int result = 0;
+        while(true){
+            Scanner userInputData = new Scanner(System.in);
+            try {
+                if(type == "row"){
+                    System.out.print(padLeft("Row of " + shipName + " ship : ", indent));
+                } else if(type == "column"){
+                    System.out.print(padLeft("Column of " + shipName + " ship : ", indent));
+                }
+                int userInput = userInputData.nextInt(); 
+                if(0<userInput && userInput<11){
+                    result = userInput;
+                    break;
+                } else {
+                    System.out.println(padLeft(
+                            "\u001B[31m\u001B[1mYour input number must be between 1 and 10. Please type again.\u001B[0m",
+                            indent));
+                }
+            } catch(Exception error){
+                System.out.println(padLeft("\u001B[31m\u001B[1mYour input must be an integer. Please type again.\u001B[0m", indent));
+            }
+        }
+        return result;
+    }
+
     private static void settingUpShips() throws InterruptedException{
         int[][] playerShips = new int[shipCount][2];
         int[][] computerShips = generateRandomShipLocation();
@@ -205,56 +231,20 @@ public class Battleships {
             boolean hasSameArray = false;
             do{
                 System.out.println(padLeft("Please type row and column for the " + shipName[index] + " ship to put into the map.", indent));
-                while(true){
-                    try {
-                        Scanner userInputShipRow = new Scanner(System.in);
-                        System.out.print(padLeft("Row of " + shipName[index] + " ship : ", indent));
-                        int row = userInputShipRow.nextInt();
-                        if(0<row && row<11){
-                            playerShips[index][0] = (row * 2) + 1;
-                            break;
-                        } else {
-                            System.out.println(padLeft(
-                                    "\u001B[31m\u001B[1mYour input number must be between 1 and 10. Please type again.\u001B[0m",
-                                    indent));
-                        }
-                        userInputShipRow.close();
-                    } catch(Exception error) {
-                        System.out.println(padLeft("\u001B[31m\u001B[1mYour input must be an integer. Please type again.\u001B[0m", indent));
-                    }
-                }
-
-                while(true){
-                    try{
-                        Scanner userInputShipColumn = new Scanner(System.in);
-                        System.out.print(padLeft("Column of " + shipName[index] + " ship : ", indent));
-                        int column = userInputShipColumn.nextInt();
-                        if(0<column && column<11){
-                            playerShips[index][1] = column * 2;
-                            break;
-                        } else {
-                            System.out.println(padLeft(
-                                    "\u001B[31m\u001B[1mYour input number must be between 1 and 10. Please type again.\u001B[0m",
-                                    indent));
-                        }
-                        userInputShipColumn.close();
-                    } catch(Exception error) {
-                        System.out.println(padLeft("\u001B[31m\u001B[1mYour input must be an integer. Please type again.\u001B[0m", indent));
-                    }
-                }
-
+                int row = getUserInputShipRowOrColumn("row", shipName[index]);
+                playerShips[index][0] = (row * 2) + 1;
+                int column = getUserInputShipRowOrColumn("column", shipName[index]);
+                playerShips[index][1] = column * 2;
                 hasSameArray = checkDuplicateShipLocation(playerShips, index);
                 if(hasSameArray){
                     System.out.println(padLeft("\u001B[31m\u001B[1mTwo ship can't be put in one location. Please chooe row and column again.\u001B[0m",indent));
                 }
             } while(hasSameArray);
-
-            System.out.println(""); 
         }
 
         System.out.println(padLeft("\u001B[32m\u001B[1mSetup Completed...\u001B[0m", indent));
         pressEnterToContinue();        
-
+        displayMap(playerShips, "player");
         startTheBattle();
     } 
 
