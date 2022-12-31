@@ -24,7 +24,7 @@ public class Battleships {
         } catch(Exception error){}
     }
 
-    private static void playerExitOrNot(Scanner userInput) {
+    private static void playerExitOrNot(Scanner userInput, String fromWhere) {
         try { 
             System.out.print(padLeft("Are you sure you want to exit? | Please Type \"Yes\" or \"No\" : ", indent));
             String exitOrNot = userInput.nextLine().trim();
@@ -33,15 +33,19 @@ public class Battleships {
                 System.out.println("");
                 System.exit(0);
             } else if (exitOrNot.toLowerCase().equals("no")){
-                startTheGame();
+                if(fromWhere == "startTheGame"){
+                    startTheGame();
+                } else if(fromWhere == "playAgain"){
+                    playAgain();
+                }
             } else {
                 System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
                 Thread.sleep(1000);
-                playerExitOrNot(userInput);
+                playerExitOrNot(userInput, fromWhere);
             }
         } catch(Exception error){}
     }
-    
+
     private static void clearConsole() {
         System.out.print("\033[H\033[2J");  
         System.out.flush();  
@@ -59,7 +63,7 @@ public class Battleships {
                 userInput.close();
                 return;
             } else if (startOrNot.toLowerCase().equals("no")){
-                playerExitOrNot(userInput);
+                playerExitOrNot(userInput, "startTheGame");
             } else {
                 System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
                 Thread.sleep(1000);
@@ -89,7 +93,6 @@ public class Battleships {
     }
 
     private static void displayMap(int[][] shipLocation, String playerType) {
-        System.out.println("");
         if(playerType.equals("player") || playerType.equals("blank")){
             System.out.println(padLeft("Player Board", indent));
         } else if(playerType.equals("computer")){
@@ -131,10 +134,25 @@ public class Battleships {
                         if(column%2 == 0){
                             for(int index=0; index<shipLocation.length; index++){
                                 if(shipLocation[index][0] == row && shipLocation[index][1] == column){
+                                    // 0 -> miss
+                                    // 1 -> hit
+                                    // 2 -> none
                                     if(playerType.equals("computer")){
-                                        character = "\u001B[31m\u001B[1m" + "C" + "\u001B[0m";
+                                        if(shipLocation[index][2] == 0){
+                                            character = "\u001B[31m\u001B[1m-\u001B[0m";
+                                        } else if(shipLocation[index][2] == 1){
+                                            character = "\u001B[32m\u001B[1m!\u001B[0m";
+                                        } else if(shipLocation[index][2] == 2){
+                                            character = "\u001B[34m\u001B[1m" + "C" + "\u001B[0m";
+                                        }
                                     } else if(playerType.equals("player")){
-                                        character = "\u001B[32m\u001B[1m" + "@" + "\u001B[0m";
+                                        if(shipLocation[index][2] == 0){
+                                            character = "\u001B[31m\u001B[1m-\u001B[0m";
+                                        } else if(shipLocation[index][2] == 1){
+                                            character = "\u001B[32m\u001B[1mX\u001B[0m";
+                                        } else if(shipLocation[index][2] == 2){
+                                            character = "\u001B[34m\u001B[1m" + "@" + "\u001B[0m";
+                                        }
                                     }
                                     break;
                                 } else {
@@ -157,7 +175,6 @@ public class Battleships {
             }
             System.out.println("");
         }
-        System.out.println("");
     }
 
     private static boolean checkDuplicateShipLocation(int[][] shipLocation, int currentIndex){
@@ -173,15 +190,20 @@ public class Battleships {
         return isDuplicate;
     }
 
-    private static int[][] generateRandomShipLocation(){
-        int[][] randomShipLocation = new int[shipCount][2];
-        for(int index=0; index<shipCount; index++){
+    private static int[][] generateRandomShipLocation(int generateCount){
+        int[][] randomShipLocation = new int[shipCount][3];
+        for(int index=0; index<generateCount; index++){
             boolean hasSameArray = false;
             do {
                 int randomRow = ThreadLocalRandom.current().nextInt(1, 11);
                 randomShipLocation[index][0] = (randomRow * 2) + 1;
                 int randomColumn = ThreadLocalRandom.current().nextInt(1,11);
                 randomShipLocation[index][1] = randomColumn * 2;
+
+                // 0 -> miss
+                // 1 -> hit
+                // 2 -> none
+                randomShipLocation[index][2] = 2;
                 hasSameArray = checkDuplicateShipLocation(randomShipLocation, index);
             } while(hasSameArray);
         }
@@ -223,9 +245,8 @@ public class Battleships {
 
     private static void settingUpShips() {
         try {
-
-            int[][] playerShips = new int[shipCount][2];
-            int[][] computerShips = generateRandomShipLocation();
+            int[][] playerShips = new int[shipCount][3];
+            int[][] computerShips = generateRandomShipLocation(shipCount);
             int[][] noShips = {{0,0}, {0,0}, {0,0}, {0,0}, {0,0}};
             System.out.println("");
             displayRules();
@@ -241,6 +262,11 @@ public class Battleships {
                     playerShips[index][0] = (row * 2) + 1;
                     int column = getUserInputShipRowOrColumn("column", shipName[index]);
                     playerShips[index][1] = column * 2;
+
+                    // 0 -> miss
+                    // 1 -> hit
+                    // 2 -> none
+                    playerShips[index][2] = 2;
                     hasSameArray = checkDuplicateShipLocation(playerShips, index);
                     if(hasSameArray){
                         System.out.println(padLeft("\u001B[31m\u001B[1mTwo ship can't be put in one location. Please chooe row and column again.\u001B[0m",indent));
@@ -249,13 +275,163 @@ public class Battleships {
             }
             System.out.println(padLeft("\u001B[32m\u001B[1mSetup Completed...\u001B[0m", indent));
             pressEnterToContinue();        
-            startTheBattle();
+            startTheBattle(playerShips, computerShips);
         } catch(Exception erro){}
     } 
 
-    private static void startTheBattle(){
-
+    private static int[] checkHitOrNot(int[][] ships, int[] shipLocation){
+        // index 0 -> status (0:nohit, 1:hit, 2:duplicate)
+        // index 1 -> hit index
+        int[] isHit = { 0, 0 };
+        for(int index=0; index < ships.length; index++){
+            if(Arrays.equals(ships[index], shipLocation)){
+                isHit[0] = 1; 
+                isHit[1] = index;
+                break;
+            } else { 
+                int[] ship1 = Arrays.copyOfRange(ships[index], 0,2);
+                int[] ship2 = Arrays.copyOfRange(shipLocation, 0,2);
+                if(Arrays.equals(ship1, ship2)){
+                   isHit[0] = 2; 
+                }
+            }
+        }
+        return isHit;
     }
+
+    private static void startTheBattle(int[][] playerShips, int[][] computerShips){
+        int playerShipCount = shipCount;
+        int computerShipCount = shipCount;
+        int updateArrayCount;
+        String turn = "player";
+        int[] isHit;
+
+        while((computerShipCount != 0) && (playerShipCount != 0)){
+            clearConsole(); 
+            if(turn.equals("player")){
+                System.out.println(padLeft("\u001B[32m\u001B[1mBattleships Game [ PLAYER TURN ]\u001B[0m", indent));
+            } else if(turn.equals("computer")){
+                System.out.println(padLeft("\u001B[31m\u001B[1mBattleships Game [ COMPUTER TURN ]\u001B[0m", indent));
+            }
+            System.out.println(padLeft("Computer Ships : " + computerShipCount, indent));
+            System.out.println(padLeft("Player Ships : " + playerShipCount, indent));
+            System.out.println("");
+
+            displayMap(computerShips, "computer");
+            displayMap(playerShips, "player");
+
+            if(turn.equals("player")){
+                do {
+                    int[] playerGuess = new int[3];
+                    System.out.println(padLeft("Please type row and column to guess the computer ship.", indent));
+                    int row = getUserInputShipRowOrColumn("row", "computer");
+                    playerGuess[0] = (row * 2) + 1;
+                    int column = getUserInputShipRowOrColumn("column", "computer");
+                    playerGuess[1] = column * 2;
+
+                    // 0 -> miss
+                    // 1 -> hit
+                    // 2 -> none
+                    playerGuess[2] = 2;
+                    isHit = checkHitOrNot(computerShips, playerGuess);
+                    if(isHit[0] == 0){
+                        playerGuess[2] = 0;
+                        updateArrayCount = 0;
+                        updateArrayCount = computerShips.length + 1;
+                        computerShips = Arrays.copyOf(computerShips, updateArrayCount);
+                        computerShips[computerShips.length-1] = playerGuess;
+                        System.out.println(padLeft("\u001B[31m\u001B[1mYou miss the target.\u001B[0m", indent));
+                    } else if(isHit[0] == 1){
+                        computerShips[isHit[1]][2] = 1;
+                        computerShipCount -= 1;
+                        System.out.println(padLeft("\u001B[32m\u001B[1mYou hit the right target.\u001B[0m", indent));
+                    } else if(isHit[0] == 2){
+                        System.out.println(padLeft("\u001B[33m\u001B[1mYou chose the existing row and column. Please choose again.\u001B[0m", indent));
+                        try { 
+                            Thread.sleep(1000);
+                        } catch(Exception error){}
+                    }
+                } while(isHit[0] == 2);
+                turn = "computer";
+            } else if(turn.equals("computer")){
+                System.out.println(padLeft("\u001B[32m\u001B[1mComputer Guessing...\u001B[0m", indent));
+                try {
+                    Thread.sleep(2000);
+                } catch(Exception error){}
+                do {
+                    int[] computerGuess = generateRandomShipLocation(1)[0];
+                    isHit = checkHitOrNot(playerShips, computerGuess);
+
+                    if(isHit[0] == 0){
+                        computerGuess[2] = 0;
+                        updateArrayCount = 0;
+                        updateArrayCount = playerShips.length + 1;
+                        playerShips = Arrays.copyOf(playerShips, updateArrayCount);
+                        playerShips[playerShips.length-1] = computerGuess;
+                        System.out.println(padLeft("\u001B[31m\u001B[1mComputer miss the target.\u001B[0m", indent));
+                    } else if(isHit[0] == 1){
+                        playerShips[isHit[1]][2] = 1;
+                        playerShipCount -= 1;
+                        System.out.println(padLeft("\u001B[32m\u001B[1mComputer hit the right target.\u001B[0m", indent));
+                    } else if(isHit[0] == 2){
+                        continue;
+                    }
+                } while(isHit[0] == 2);
+                turn = "player";
+            }
+
+            try { 
+                Thread.sleep(1500);
+            } catch(Exception error){}
+        }
+       
+        clearConsole();
+        if(playerShipCount == 0){
+            System.out.println("");
+            System.out.println(padLeft("\u001B[31m\u001B[1mBattleships Game [ WINNER : COMPUTER ]\u001B[0m", indent));
+            System.out.println(padLeft("Computer Ships : " + computerShipCount, indent));
+            System.out.println(padLeft("Player Ships : " + playerShipCount, indent));
+            System.out.println("");
+            displayMap(playerShips, "player"); 
+            System.out.println("");
+            System.out.println(padLeft("\u001B[31m\u001B[1mGAME OVER!\u001B[0m", indent));
+            System.out.println("");
+        } else if(computerShipCount == 0){
+            System.out.println("");
+            System.out.println(padLeft("\u001B[32m\u001B[1mBattleships Game [ WINNER : PLAYER ]\u001B[0m", indent));
+            System.out.println(padLeft("Computer Ships : " + computerShipCount, indent));
+            System.out.println(padLeft("Player Ships : " + playerShipCount, indent));
+            System.out.println("");
+            displayMap(computerShips, "computer");
+            System.out.println("");
+            System.out.println(padLeft("\u001B[32m\u001B[1mYOU WIN THE GAME!\u001B[0m", indent));
+            System.out.println("");
+        }
+
+        playAgain();
+    }
+
+    private static void playAgain(){
+        Scanner userInput = new Scanner(System.in);
+        System.out.print(padLeft("Do you want to play again? | Please Type \"Yes\" or \"No\" : ", indent));
+        String playAgainOrNot = userInput.nextLine().trim();
+
+        if(playAgainOrNot.toLowerCase().equals("yes")){
+            clearConsole();
+            displayTitle();
+            settingUpShips();
+            userInput.close();
+            return;
+        } else if (playAgainOrNot.toLowerCase().equals("no")){
+            playerExitOrNot(userInput, "playAgain");
+        } else {
+            System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
+            try { 
+                Thread.sleep(1000);
+            } catch(Exception erro){}
+        }
+        playAgain();
+    } 
 
     private static void displayTitle() {
         try {
