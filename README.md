@@ -8,11 +8,11 @@ Battleship (also known as Battleships or Sea Battle) is a strategy type guessing
 
 ## Screenshots
 
-![App Screenshot]()
-![App Screenshot]()
-![App Screenshot]()
-![App Screenshot]()
-![App Screenshot]()
+![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B1.png)
+![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B2.png)
+![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B3.png)
+![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B4.png)
+![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B5.png)
 
 
 ## Installation
@@ -22,7 +22,7 @@ To run the game you neeed to have : Java version after 8
 ```bash
   1. git clone https://github.com/MrB-g/Battleships-Console-Game.git
   2. cd Battleships-Console-Game
-  3. javac Battleships.java (if you don't have .class file)
+  3. javac Battleships.java
   4. java Battleships
 ```
     
