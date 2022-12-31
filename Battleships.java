@@ -76,12 +76,12 @@ public class Battleships {
         try {
             String[] rules = new String[8];
             rules[0] = "Both player and computer can access five ships.";
-            rules[1] = "Player starts the battling with the computer.";
-            rules[2] = "Player should guess all the opponent ships' locations in the map.";
-            rules[3] = "Player hits computer's ship, the location should be indicated as '!'.";
-            rules[4] = "Computer hits player's ship, the location should be indicated as 'X'.";
-            rules[5] = "Both players fail to guess the opponent's location, it should be indicated as '-'.";
-            rules[6] = "The ship count should be decremented by 1 based on the hits.";
+            rules[1] = "Player will starts the battling with the computer.";
+            rules[2] = "Player must guess all the opponent ships' locations in the map.";
+            rules[3] = "If the player hits computer's ship, the location should be indicated as '!'.";
+            rules[4] = "If the computer hits player's ship, the location should be indicated as 'X'.";
+            rules[5] = "If both players fail to guess the opponent's location, it should be indicated as '-'.";
+            rules[6] = "The ship count will be automatically decremented by 1 based on the hits.";
             rules[7] = "Player or computer who can firstly guess all the opponent's ship location will be the winner.";
             System.out.println(padLeft("Here are the rules that player shouold know before playing!", indent));
             for(int rule=0; rule < rules.length; rule++){
@@ -436,9 +436,9 @@ public class Battleships {
     private static void displayTitle() {
         try {
             System.out.println("");
-            displayAsciiArt("./AsciiArt/battleShips.txt");
+            displayAsciiArt("./asciiArt/battleShips.txt");
             System.out.println("");
-            displayAsciiArt("./AsciiArt/title.txt");
+            displayAsciiArt("./asciiArt/title.txt");
         } catch(Exception error){}
     } 
 
