@@ -1,19 +1,13 @@
-
 # Battleships Console Game
 
 Battleship (also known as Battleships or Sea Battle) is a strategy type guessing game for two players. It is played on ruled grids (paper or board) on which each player's fleet of warships are marked. The locations of the fleets are concealed from the other player.
 
-
-
-
 ## Screenshots
-
-![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B1.png)
-![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B2.png)
-![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B3.png)
-![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B4.png)
-![App Screenshot](https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B5.png)
-
+<img src="https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B1.png" alt="drawing" style="width:200px;"/>
+<img src="https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B2.png" alt="drawing" style="width:200px;"/>
+<img src="https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B3.png" alt="drawing" style="width:200px;"/>
+<img src="https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B4.png" alt="drawing" style="width:200px;"/>
+<img src="https://github.com/MrB-g/Battleships-Console-Game/blob/main/media/B5.png" alt="drawing" style="width:200px;"/>
 
 ## Installation
 
