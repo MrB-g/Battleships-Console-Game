@@ -2,7 +2,6 @@ import java.util.Scanner;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.Arrays;
 import java.io.File;
-import java.io.FileNotFoundException;
 
 public class Battleships {
     private static int indent = 1;
@@ -12,73 +11,81 @@ public class Battleships {
         return " ".repeat(count) + s;  
     }
 
-    private static void displayAsciiArt(String filePath) throws FileNotFoundException, InterruptedException {
-        File txtSourceFile = new File(filePath);
-        Scanner txtReader = new Scanner(txtSourceFile);
-        while (txtReader.hasNextLine()) {
-            String line = txtReader.nextLine();
-            System.out.println(padLeft(line, indent));
-            Thread.sleep(40);
-        }
-        txtReader.close();
+    private static void displayAsciiArt(String filePath) {
+        try { 
+            File txtSourceFile = new File(filePath);
+            Scanner txtReader = new Scanner(txtSourceFile);
+            while (txtReader.hasNextLine()) {
+                String line = txtReader.nextLine();
+                System.out.println(padLeft(line, indent));
+                Thread.sleep(40);
+            }
+            txtReader.close();
+        } catch(Exception error){}
     }
 
-    private static void playerExitOrNot(Scanner userInput) throws FileNotFoundException, InterruptedException {
-        System.out.print(padLeft("Are you sure you want to exit? | Please Type \"Yes\" or \"No\" : ", indent));
-        String exitOrNot = userInput.nextLine().trim();
-        if(exitOrNot.toLowerCase().equals("yes")){
-            System.out.println(padLeft("Hope to see you again...", indent));
-            System.out.println("");
-            System.exit(0);
-        } else if (exitOrNot.toLowerCase().equals("no")){
-            startTheGame();
-        } else {
-            System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
-            Thread.sleep(1000);
-            playerExitOrNot(userInput);
-        }
+    private static void playerExitOrNot(Scanner userInput) {
+        try { 
+            System.out.print(padLeft("Are you sure you want to exit? | Please Type \"Yes\" or \"No\" : ", indent));
+            String exitOrNot = userInput.nextLine().trim();
+            if(exitOrNot.toLowerCase().equals("yes")){
+                System.out.println(padLeft("Hope to see you again...", indent));
+                System.out.println("");
+                System.exit(0);
+            } else if (exitOrNot.toLowerCase().equals("no")){
+                startTheGame();
+            } else {
+                System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
+                Thread.sleep(1000);
+                playerExitOrNot(userInput);
+            }
+        } catch(Exception error){}
     }
     
-    private static void clearConsole(){
+    private static void clearConsole() {
         System.out.print("\033[H\033[2J");  
         System.out.flush();  
     }
 
-    private static void startTheGame() throws FileNotFoundException, InterruptedException {
-        System.out.println("");
-        Scanner userInput = new Scanner(System.in);
-        System.out.println(padLeft("Welcome From Battleships Game!", indent));
-        System.out.print(padLeft("Are you ready to start? | Please Type \"Yes\" or \"No\" : ", indent));
-        String startOrNot = userInput.nextLine().trim();
-        if(startOrNot.toLowerCase().equals("yes")){
-            settingUpShips();
-            userInput.close();
-            return;
-        } else if (startOrNot.toLowerCase().equals("no")){
-            playerExitOrNot(userInput);
-        } else {
-            System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
-            Thread.sleep(1000);
-        }
-        startTheGame();
+    private static void startTheGame() {
+        try {
+            System.out.println("");
+            Scanner userInput = new Scanner(System.in);
+            System.out.println(padLeft("Welcome From Battleships Game!", indent));
+            System.out.print(padLeft("Are you ready to start? | Please Type \"Yes\" or \"No\" : ", indent));
+            String startOrNot = userInput.nextLine().trim();
+            if(startOrNot.toLowerCase().equals("yes")){
+                settingUpShips();
+                userInput.close();
+                return;
+            } else if (startOrNot.toLowerCase().equals("no")){
+                playerExitOrNot(userInput);
+            } else {
+                System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
+                Thread.sleep(1000);
+            }
+            startTheGame();
+        } catch(Exception erro){}
     }
 
-    private static void displayRules() throws InterruptedException{
-        String[] rules = new String[8];
-        rules[0] = "Both player and computer can access five ships.";
-        rules[1] = "Player starts the battling with the computer.";
-        rules[2] = "Player should guess all the opponent ships' locations in the map.";
-        rules[3] = "Player hits computer's ship, the location should be indicated as '!'.";
-        rules[4] = "Computer hits player's ship, the location should be indicated as 'X'.";
-        rules[5] = "Both players fail to guess the opponent's location, it should be indicated as '-'.";
-        rules[6] = "The ship count should be decremented by 1 based on the hits.";
-        rules[7] = "Player or computer who can firstly guess all the opponent's ship location will be the winner.";
-        System.out.println(padLeft("Here are the rules that player shouold know before playing!", indent));
-        for(int rule=0; rule < rules.length; rule++){
-            String ruleLine = "Rule " + (rule+1) + " : " + rules[rule];
-            System.out.println(padLeft(ruleLine, indent));
-            Thread.sleep(50);
-        }
+    private static void displayRules() {
+        try {
+            String[] rules = new String[8];
+            rules[0] = "Both player and computer can access five ships.";
+            rules[1] = "Player starts the battling with the computer.";
+            rules[2] = "Player should guess all the opponent ships' locations in the map.";
+            rules[3] = "Player hits computer's ship, the location should be indicated as '!'.";
+            rules[4] = "Computer hits player's ship, the location should be indicated as 'X'.";
+            rules[5] = "Both players fail to guess the opponent's location, it should be indicated as '-'.";
+            rules[6] = "The ship count should be decremented by 1 based on the hits.";
+            rules[7] = "Player or computer who can firstly guess all the opponent's ship location will be the winner.";
+            System.out.println(padLeft("Here are the rules that player shouold know before playing!", indent));
+            for(int rule=0; rule < rules.length; rule++){
+                String ruleLine = "Rule " + (rule+1) + " : " + rules[rule];
+                System.out.println(padLeft(ruleLine, indent));
+                Thread.sleep(50);
+            }
+        } catch(Exception error){}
     }
 
     private static void displayMap(int[][] shipLocation, String playerType) {
@@ -214,54 +221,56 @@ public class Battleships {
         return result;
     }
 
-    private static void settingUpShips() throws InterruptedException{
-        int[][] playerShips = new int[shipCount][2];
-        int[][] computerShips = generateRandomShipLocation();
-        int[][] noShips = {{0,0}, {0,0}, {0,0}, {0,0}, {0,0}};
+    private static void settingUpShips() {
+        try {
 
-        System.out.println("");
-        displayRules();
-        
-        System.out.println("");
-        System.out.println(padLeft("Let's setup the battleships.", indent));
-        displayMap(noShips, "blank");
-
-        String[] shipName = {"1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"};
-        for(int index=0; index<playerShips.length; index++){
-            boolean hasSameArray = false;
-            do{
-                System.out.println(padLeft("Please type row and column for the " + shipName[index] + " ship to put into the map.", indent));
-                int row = getUserInputShipRowOrColumn("row", shipName[index]);
-                playerShips[index][0] = (row * 2) + 1;
-                int column = getUserInputShipRowOrColumn("column", shipName[index]);
-                playerShips[index][1] = column * 2;
-                hasSameArray = checkDuplicateShipLocation(playerShips, index);
-                if(hasSameArray){
-                    System.out.println(padLeft("\u001B[31m\u001B[1mTwo ship can't be put in one location. Please chooe row and column again.\u001B[0m",indent));
-                }
-            } while(hasSameArray);
-        }
-
-        System.out.println(padLeft("\u001B[32m\u001B[1mSetup Completed...\u001B[0m", indent));
-        pressEnterToContinue();        
-        displayMap(playerShips, "player");
-        startTheBattle();
+            int[][] playerShips = new int[shipCount][2];
+            int[][] computerShips = generateRandomShipLocation();
+            int[][] noShips = {{0,0}, {0,0}, {0,0}, {0,0}, {0,0}};
+            System.out.println("");
+            displayRules();
+            System.out.println("");
+            System.out.println(padLeft("Let's setup the battleships.", indent));
+            displayMap(noShips, "blank");
+            String[] shipName = {"1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"};
+            for(int index=0; index<playerShips.length; index++){
+                boolean hasSameArray = false;
+                do{
+                    System.out.println(padLeft("Please type row and column for the " + shipName[index] + " ship to put into the map.", indent));
+                    int row = getUserInputShipRowOrColumn("row", shipName[index]);
+                    playerShips[index][0] = (row * 2) + 1;
+                    int column = getUserInputShipRowOrColumn("column", shipName[index]);
+                    playerShips[index][1] = column * 2;
+                    hasSameArray = checkDuplicateShipLocation(playerShips, index);
+                    if(hasSameArray){
+                        System.out.println(padLeft("\u001B[31m\u001B[1mTwo ship can't be put in one location. Please chooe row and column again.\u001B[0m",indent));
+                    }
+                } while(hasSameArray);
+            }
+            System.out.println(padLeft("\u001B[32m\u001B[1mSetup Completed...\u001B[0m", indent));
+            pressEnterToContinue();        
+            startTheBattle();
+        } catch(Exception erro){}
     } 
 
     private static void startTheBattle(){
-        System.out.println(padLeft("START THE BATTLE.", indent));
+
     }
 
-    private static void displayTitle() throws FileNotFoundException, InterruptedException{
-        System.out.println("");
-        displayAsciiArt("./AsciiArt/battleShips.txt");
-        System.out.println("");
-        displayAsciiArt("./AsciiArt/title.txt");
+    private static void displayTitle() {
+        try {
+            System.out.println("");
+            displayAsciiArt("./AsciiArt/battleShips.txt");
+            System.out.println("");
+            displayAsciiArt("./AsciiArt/title.txt");
+        } catch(Exception error){}
     } 
 
-    public static void main(String[] args) throws FileNotFoundException, InterruptedException {
+    public static void main(String[] args){
         clearConsole();
-        displayTitle();
-        startTheGame();
+        try { 
+            displayTitle();
+            startTheGame();
+        } catch(Exception error){}
     }
 }
