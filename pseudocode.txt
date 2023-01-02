@@ -1,0 +1,407 @@
+import necesssary libraries
+
+declare class Battleships
+    declare static variable indent with value of 1
+    declare static variable shipCount with value of 5
+    
+    declare static function main with input param args 
+        clear the console
+        try
+            call the displayTitle function
+            call the startGame function
+        catch any exceptions
+
+    declare function padLeft that takes in a string called s and an integer called count:
+        return a string that has count number of spaces followed by the string s
+
+    declare function displayAsciiArt that takes in a string called filePath:
+        try the following:
+            Create a new File object called txtSourceFile and initialize it with filePath
+            Create a new Scanner object called txtReader and initialize it with txtSourceFile
+            While txtReader has a next line:
+                Create a string called line and initialize it with the next line from txtReader
+                Print the result of calling padLeft on line and indent
+                Sleep for 40 milliseconds
+            Close txtReader
+        catch any exceptions
+
+    declare function playerExitOrNot that takes in a Scanner object called playerInput and a string called fromWhere:
+        try the following:
+            Print a message asking the player if they want to exit and prompting them to type "Yes" or "No"
+            Create a string called exitOrNot and initialize it with the trimmed next line from playerInput
+            If exitOrNot, when converted to lower case, is equal to "yes":
+                Print a message saying "Hope to see you again..."
+                Print a blank line
+                Exit the program
+            Else if exitOrNot, when converted to lower case, is equal to "no":
+                If fromWhere is equal to "startTheGame":
+                    Call the startTheGame function
+                Else if fromWhere is equal to "playAgain":
+                    Call the playAgain function
+            Else:
+                Print a message saying "Please only type "Yes" or "No""
+                Sleep for 1000 milliseconds
+                Call playerExitOrNot with playerInput and fromWhere as arguments
+        catch any exceptions
+
+    declare function clearConsole:
+        Output the ASCII escape code "\033[H\033[2J"
+        Flush the output buffer
+
+    declare function startTheGame:
+        try the following:
+            Print a blank line
+            Create a new Scanner object called playerInput and initialize it with System.in
+            Print a message saying "Welcome From Battleships Game!"
+            Print a message asking the player if they are ready to start and prompting them to type "Yes" or "No"
+            Create a string called startOrNot and initialize it with the trimmed next line from playerInput
+            If startOrNot, when converted to lower case, is equal to "yes":
+                Call the settingUpShips function
+                Close playerInput
+                return
+            Else if startOrNot, when converted to lower case, is equal to "no":
+                Call the playerExitOrNot function with playerInput and "startTheGame" as arguments
+            Else:
+                Print a message saying "Please only type "Yes" or "No""
+                Sleep for 1000 milliseconds
+            Call startTheGame
+        catch any exceptions
+
+    declare function displayRules:
+        try the following:
+            Create a new array of strings called rules with 8 elements
+            Set the first element of rules to "Both player and computer can access five ships."
+            Set the second element of rules to "Player will starts the battling with the computer."
+            Set the third element of rules to "Player must guess all the opponent ships' locations in the map."
+            Set the fourth element of rules to "If the player hits computer's ship, the location should be indicated as '!'."
+            Set the fifth element of rules to "If the computer hits player's ship, the location should be indicated as 'X'."
+            Set the sixth element of rules to "If both players fail to guess the opponent's location, it should be indicated as '-'."
+            Set the seventh element of rules to "The ship count will be automatically decremented by 1 based on the hits."
+            Set the eighth element of rules to "Player or computer who can firstly guess all the opponent's ship location will be the winner."
+            Print a message saying "Here are the rules that player shouold know before playing!"
+            For each element in rules:
+                Create a string called ruleLine and set it to "Rule " followed by the index of the element plus 1, followed by " : ", followed by the element itself
+                Print the result of calling padLeft on ruleLine and indent
+                Sleep for 50 milliseconds
+        catch any exceptions
+
+    declare function checkDuplicateShipLocation that takes in a 2D array of integers called shipLocation and an integer called currentIndex:
+        Set a boolean called isDuplicate to false
+        For each integer called previousIndex from currentIndex-1 down to 0:
+            If shipLocation at currentIndex is equal to shipLocation at previousIndex:
+                Set isDuplicate to true
+                Break
+            Else:
+                Set isDuplicate to false
+        return isDuplicate
+
+    declare function generateRandomShipLocation that takes in an integer called generateCount:
+        Create a new 2D array of integers called randomShipLocation with shipCount rows and 3 columns
+        For each integer called index from 0 to generateCount-1:
+            Set a boolean called hasSameArray to false
+            Do the following:
+                Generate a random integer called randomRow from 1 to 10
+                Set the first element of the element at index in randomShipLocation to (randomRow * 2) + 1
+                Generate a random integer called randomColumn from 1 to 10
+                Set the second element of the element at index in randomShipLocation to randomColumn * 2
+                Set the third element of the element at index in randomShipLocation to 2
+                Set hasSameArray to the result of calling checkDuplicateShipLocation on randomShipLocation and index
+            While hasSameArray is true
+        return randomShipLocation
+
+    declare function pressEnterToContinue:
+        Print a message saying "Press Enter key to start the battle."
+        try the following:
+            Read from System.in
+        catch any exceptions
+
+    declare function getUserInputShipRowOrColumn that takes in a string called type and a string called shipName:
+        Set an integer called result to 0
+        While true:
+            Create a new Scanner object called playerInputData and initialize it with System.in
+            try the following:
+                If type is equal to "row":
+                    Print a message saying "Row of " followed by shipName followed by " ship : "
+                Else if type is equal to "column":
+                    Print a message saying "Column of " followed by shipName followed by " ship : "
+                Create an integer called playerInput and initialize it with the next integer from playerInputData
+                If 0 is less than playerInput and playerInput is less than 11:
+                    Set result to playerInput
+                    Break
+                Else:
+                    Print a message saying "Your input number must be between 1 and 10. Please type again."
+            catch any exceptions:
+                Print a message saying "Your input must be an integer. Please type again."
+        return result
+
+    declare function checkHitOrNot that takes in a 2D array of integers called ships and an array of integers called shipLocation:
+        Create a new array of integers called isHit with 2 elements
+        Set the first element of isHit to 0 and the second element to 0
+        For each integer called index from 0 to the length of ships-1:
+            If ships at index is equal to shipLocation:
+                Set the first element of isHit to 1
+                Set the second element of isHit to index
+                Break
+            Else:
+                Create a new array of integers called ship1 and set it to a copy of the first two elements of ships at index
+                Create a new array of integers called ship2 and set it to a copy of the first two elements of shipLocation
+                If ship1 is equal to ship2:
+                    Set the first element of isHit to 2
+        return isHit
+
+    declare function playAgain:
+        Create a new Scanner object called playerInput and initialize it with System.in
+        Print a message saying "Do you want to play again? | Please Type "Yes" or "No" : "
+        Create a string called playAgainOrNot and initialize it with the next line from playerInput, trimmed of leading and trailing white space
+        If playAgainOrNot is equal to "yes", case-insensitive:
+            Call clearConsole
+            Call displayTitle
+            Call settingUpShips
+            Close playerInput
+            return
+        Else if playAgainOrNot is equal to "no", case-insensitive:
+            Call playerExitOrNot with playerInput and "playAgain" as arguments
+        Else:
+            Print a message saying "Please only type "Yes" or "No"."
+            try the following:
+                Sleep for 1000 milliseconds
+            catch any exceptions
+        Call playAgain
+
+    declare function displayTitle:
+        try the following:
+            Print an empty line
+            Call displayAsciiArt with "./asciiArt/battleShips.txt" as an argument
+            Print an empty line
+            Call displayAsciiArt with "./asciiArt/title.txt" as an argument
+        catch any exceptions
+        
+    declare function displayMap that takes in a 2D aarray of integers called shipLocation and a string called playerType:
+        If playerType is equal to "player" or "blank":
+            Print a message saying "Player Board"
+        Else if playerType is equal to "computer":
+            Print a message saying "Computer Board"
+        Create integers called totalRow, totalColumn, rowNumber, and columnNumber
+        Set totalRow to 22
+        Set totalColumn to 21
+        Set rowNumber to 1
+        Set columnNumber to 1
+        Create a string called character and set it to "+"
+        For an integer called row, starting at 1 and going up to totalRow:
+            Create an integer called numRowDigit and set it to the length of rowNumber as a string
+            If row modulo 2 is not equal to 0 and row is not equal to 1:
+                If numRowDigit is equal to 2:
+                Print a message padded with leading spaces, using rowNumber as the message
+                Else:
+                Print a message padded with leading spaces, using rowNumber and a space as the message
+                Increment rowNumber by 1
+            Else:
+                Print a message padded with leading spaces and containing two spaces
+            For an integer called column, starting at 1 and going up to totalColumn:
+                If row is equal to 1:
+                    If column modulo 2 is equal to 0:
+                        Print a message padded with leading spaces, using columnNumber as the message
+                        Increment columnNumber by 1
+                    Else:
+                        Print a message padded with leading spaces and containing a single space
+                If row is not equal to 1:
+                    if row is not divisible by 2
+                        if column is divisible by 2
+                            for each index in shipLocation
+                                if shipLocation[index][0] is equal to row and shipLocation[index][1] is equal to column
+                                    if playerType is "computer"
+                                        if shipLocation[index][2] is 0
+                                            character is a miss
+                                        else if shipLocation[index][2] is 1
+                                            character is a hit
+                                        else if shipLocation[index][2] is 2
+                                            character is "C"
+                                    else if playerType is "player"
+                                        if shipLocation[index][2] is 0
+                                            character is a miss
+                                        else if shipLocation[index][2] is 1
+                                            character is "X"
+                                        else if shipLocation[index][2] is 2
+                                            character is "@"
+                                break the loop
+                            else
+                                character is a space
+                        else if column is not divisible by 2
+                            character is a black dot
+                    else if row is divisible by 2
+                        if column is divisible by 2
+                            character is a black dot
+                        else if column is not divisible by 2
+                            character is a plus sign
+                    pad character with whitespace on the left until it reaches a length of indent
+                    print padded character
+            print a new line
+    
+    declare function settingUpShips:
+        try 
+            create a 2D array called playerShips with shipCount rows and 3 columns
+            create a 2D array called computerShips by calling the generateRandomShipLocation function with shipCount as the argument
+            create a 2D array called noShips with 5 rows and 2 columns and containing the values {{0,0}, {0,0}, {0,0}, {0,0}, {0,0}}
+            print an empty line
+            display the rules
+            print an empty line
+            print "Let's setup the battleships." with padding on the left until it reaches a length of indent
+            display a map using noShips and "blank" as arguments
+            create an array called shipName with the elements "1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"
+            for each index in playerShips
+                create a boolean variable called hasSameArray and set it to false
+                repeat the following block until hasSameArray is false:
+                    print "Please type row and column for the " + shipName[index] + " ship to put into the map." with padding on the left until it reaches a length of indent
+                    get the row input from the user and store it in a variable called row
+                    set playerShips[index][0] to (row * 2) + 1
+                    get the column input from the user and store it in a variable called column
+                    set playerShips[index][1] to column * 2
+                    set playerShips[index][2] to 2
+                    set hasSameArray to the result of calling checkDuplicateShipLocation with playerShips and index as arguments
+                    if hasSameArray is true
+                        print "Two ship can't be put in one location. Please chooe row and column again." with padding on the left until it reaches a length of indent
+                print "Setup Completed..." with padding on the left until it reaches a length of indent
+                call pressEnterToContinue function
+                call startTheBattle function with playerShips and computerShips as arguments
+        catch any exceptions
+
+    declare function startTheBattle that takes in a 2D array of integers called playerShips and a 2D array of intergers called computerShips:
+        create a variable called playerShipCount and set it to shipCount
+        create a variable called computerShipCount and set it to shipCount
+        create a variable called updateArrayCount
+        create a variable called turn and set it to "player"
+        create a variable called isHit
+        while computerShipCount is not equal to 0 and playerShipCount is not equal to 0
+            clear the console
+            if turn is "player"
+                print "Battleships Game [ PLAYER TURN ]" with padding on the left until it reaches a length of indent
+            else if turn is "computer"
+                print "Battleships Game [ COMPUTER TURN ]" with padding on the left until it reaches a length of indent
+            print "Computer Ships : " + computerShipCount with padding on the left until it reaches a length of indent
+            print "Player Ships : " + playerShipCount with padding on the left until it reaches a length of indent
+            print an empty line
+            display a map using computerShips and "computer" as arguments
+            display a map using playerShips and "player" as arguments
+            if turn is "player"
+                repeat the following block until isHit[0] is not equal to 2:
+                    create a new array called playerGuess with 3 elements
+                    print "Please type row and column to guess the computer ship." with padding on the left until it reaches a length of indent
+                    get the row input from the user and store it in a variable called row
+                    set playerGuess[0] to (row * 2) + 1
+                    get the column input from the user and store it in a variable called column
+                    set playerGuess[1] to column * 2
+                    set playerGuess[2] to 2
+                    set isHit to the result of calling checkHitOrNot with computerShips and playerGuess as arguments
+                    if isHit[0] is 0
+                        set playerGuess[2] to 0
+                        set updateArrayCount to 0
+                        set updateArrayCount to computerShips.length + 1
+                        set computerShips to a copy of computerShips with updateArrayCount elements
+                        set the last element of computerShips to playerGuess
+                        print "You miss the target." with padding on the left until it reaches a length of indent
+                    else if isHit[0] is 1
+                        set computerShips[isHit[1]][2] to 1
+                        decrement computerShipCount by 1
+                        print "You hit the right target." with padding on the left until it reaches a length of indent
+                    else if isHit[0] is 2
+                        print "You chose the existing row and column. Please choose again." with padding on the left until it reaches a length of indent
+                        wait for 1000 milliseconds
+                set turn to "computer"
+            if turn is "computer"
+                print "Computer Guessing..." with padding on the left until it reaches a length of indent
+                wait for 2000 milliseconds
+                create a new array called computerGuess with 1 element
+                set computerGuess to the first element in the result of calling generateRandomShipLocation with 1 as an argument
+                set isHit to the result of calling checkHitOrNot with playerShips and computerGuess as arguments
+                if isHit[0] is 0
+                    set computerGuess[2] to 0
+                    set updateArrayCount to 0
+                    set updateArrayCount to playerShips.length + 1
+                    set playerShips to a copy of playerShips with updateArrayCount elements
+                    set the last element of playerShips to computerGuess
+                    print "Computer miss the target." with padding on the left until it reaches a length of indent
+                else if isHit[0] is 1
+                    set playerShips[isHit[1]][2] to 1
+                    decrement playerShipCount by 1
+                    print "Computer hit the right target." with padding on the left until it reaches a length of indent
+                else if isHit[0] is 2
+                    continue
+                set turn to "player"
+            wait for 1500 milliseconds
+        clear the console
+        if player ships are all destroyed:
+            display message "computer has won"
+            display final state of game
+        else if computer ships are all destroyed:
+            display message "player has won"
+            display final state of game
+        call the playAgain function
+
+
+
+
+
+
+            
+
+
+
+
+
+                        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
