@@ -24,10 +24,10 @@ public class Battleships {
         } catch(Exception error){}
     }
 
-    private static void playerExitOrNot(Scanner userInput, String fromWhere) {
+    private static void playerExitOrNot(Scanner playerInput, String fromWhere) {
         try { 
             System.out.print(padLeft("Are you sure you want to exit? | Please Type \"Yes\" or \"No\" : ", indent));
-            String exitOrNot = userInput.nextLine().trim();
+            String exitOrNot = playerInput.nextLine().trim();
             if(exitOrNot.toLowerCase().equals("yes")){
                 System.out.println(padLeft("Hope to see you again...", indent));
                 System.out.println("");
@@ -41,7 +41,7 @@ public class Battleships {
             } else {
                 System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
                 Thread.sleep(1000);
-                playerExitOrNot(userInput, fromWhere);
+                playerExitOrNot(playerInput, fromWhere);
             }
         } catch(Exception error){}
     }
@@ -54,16 +54,16 @@ public class Battleships {
     private static void startTheGame() {
         try {
             System.out.println("");
-            Scanner userInput = new Scanner(System.in);
+            Scanner playerInput = new Scanner(System.in);
             System.out.println(padLeft("Welcome From Battleships Game!", indent));
             System.out.print(padLeft("Are you ready to start? | Please Type \"Yes\" or \"No\" : ", indent));
-            String startOrNot = userInput.nextLine().trim();
+            String startOrNot = playerInput.nextLine().trim();
             if(startOrNot.toLowerCase().equals("yes")){
                 settingUpShips();
-                userInput.close();
+                playerInput.close();
                 return;
             } else if (startOrNot.toLowerCase().equals("no")){
-                playerExitOrNot(userInput, "startTheGame");
+                playerExitOrNot(playerInput, "startTheGame");
             } else {
                 System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
                 Thread.sleep(1000);
@@ -220,16 +220,16 @@ public class Battleships {
     private static int getUserInputShipRowOrColumn(String type, String shipName){
         int result = 0;
         while(true){
-            Scanner userInputData = new Scanner(System.in);
+            Scanner playerInputData = new Scanner(System.in);
             try {
                 if(type == "row"){
                     System.out.print(padLeft("Row of " + shipName + " ship : ", indent));
                 } else if(type == "column"){
                     System.out.print(padLeft("Column of " + shipName + " ship : ", indent));
                 }
-                int userInput = userInputData.nextInt(); 
-                if(0<userInput && userInput<11){
-                    result = userInput;
+                int playerInput = playerInputData.nextInt(); 
+                if(0<playerInput && playerInput<11){
+                    result = playerInput;
                     break;
                 } else {
                     System.out.println(padLeft(
@@ -412,18 +412,18 @@ public class Battleships {
     }
 
     private static void playAgain(){
-        Scanner userInput = new Scanner(System.in);
+        Scanner playerInput = new Scanner(System.in);
         System.out.print(padLeft("Do you want to play again? | Please Type \"Yes\" or \"No\" : ", indent));
-        String playAgainOrNot = userInput.nextLine().trim();
+        String playAgainOrNot = playerInput.nextLine().trim();
 
         if(playAgainOrNot.toLowerCase().equals("yes")){
             clearConsole();
             displayTitle();
             settingUpShips();
-            userInput.close();
+            playerInput.close();
             return;
         } else if (playAgainOrNot.toLowerCase().equals("no")){
-            playerExitOrNot(userInput, "playAgain");
+            playerExitOrNot(playerInput, "playAgain");
         } else {
             System.out.println(padLeft("\u001B[31m\u001B[1mPlease only type \"Yes\" or \"No\".\u001B[0m", indent));
             try { 
