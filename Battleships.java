@@ -143,7 +143,7 @@ public class Battleships {
                                         } else if(shipLocation[index][2] == 1){
                                             character = "\u001B[32m\u001B[1m!\u001B[0m";
                                         } else if(shipLocation[index][2] == 2){
-                                            character = "\u001B[34m\u001B[1m" + "C" + "\u001B[0m";
+                                            character = "\u001B[34m\u001B[1m" + " " + "\u001B[0m";
                                         }
                                     } else if(playerType.equals("player")){
                                         if(shipLocation[index][2] == 0){
